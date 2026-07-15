@@ -6,13 +6,13 @@ namespace Cell {
 	class NumericValue : public ConstantValue {
 
 	public:
-		NumericValue(float val);
+		NumericValue(double val);
 
-		float getValue();
+		double getValue();
 		std::string toString();
 
 	private:
-		float m_value;
+		double m_value;
 
 	};
 

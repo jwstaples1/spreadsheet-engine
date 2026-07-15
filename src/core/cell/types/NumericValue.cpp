@@ -3,9 +3,9 @@
 
 namespace Cell {
 
-	NumericValue::NumericValue(float val) : m_value(val) {}
+	NumericValue::NumericValue(double val) : m_value(val) {}
 
-	float NumericValue::getValue() {
+	double NumericValue::getValue() {
 		return m_value;
 	}
 
