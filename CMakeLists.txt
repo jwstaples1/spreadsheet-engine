@@ -19,3 +19,18 @@ if (CMAKE_VERSION VERSION_GREATER 3.12)
 endif()
 
 # TODO: Add tests and install targets if needed.
+
+option(WEB "Build as WASM output" OFF)
+
+if(WEB) 
+
+    set_target_properties(SpreadsheetEngine PROPERTIES
+        SUFFIX ".html"
+    )
+
+    target_link_options(SpreadsheetEngine PRIVATE
+        "-sEXPORTED_FUNCTIONS=_main"
+        "-sEXPORTED_RUNTIME_METHODS=ccall,cwrap"
+    )
+endif()
+
