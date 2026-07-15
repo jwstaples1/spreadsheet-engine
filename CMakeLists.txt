@@ -12,7 +12,7 @@ endif()
 project ("SpreadsheetEngine")
 
 # Add source to this project's executable.
-add_executable (SpreadsheetEngine "SpreadsheetEngine.cpp" "SpreadsheetEngine.h")
+add_executable (SpreadsheetEngine "SpreadsheetEngine.cpp" "SpreadsheetEngine.h" "src/core/Spreadsheet.cpp" "src/core/Spreadsheet.h"   "src/core/cell/CellAddress.cpp" "src/core/cell/CellAddress.h")
 
 if (CMAKE_VERSION VERSION_GREATER 3.12)
   set_property(TARGET SpreadsheetEngine PROPERTY CXX_STANDARD 20)

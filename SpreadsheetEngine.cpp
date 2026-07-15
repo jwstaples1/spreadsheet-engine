@@ -2,11 +2,23 @@
 //
 
 #include "SpreadsheetEngine.h"
+#include "src/core/cell/CellAddress.h"
 
 using namespace std;
+
+void mockSpreadsheet();
 
 int main()
 {
 	cout << "Hello CMake." << endl;
+
+	mockSpreadsheet();
+
 	return 0;
+}
+
+void mockSpreadsheet() {
+
+	Cell::CellAddress addr("A", 4);
+	cout << addr.toString();
 }
