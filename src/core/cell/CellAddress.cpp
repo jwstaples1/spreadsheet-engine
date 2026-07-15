@@ -13,7 +13,7 @@ namespace Cell {
 		return m_row;
 	}
 
-	string CellAddress::toString() {
+	string CellAddress::toString() const {
 		string address = std::format("{}{}", m_col, m_row);
 
 		return address;
