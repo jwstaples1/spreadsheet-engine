@@ -8,7 +8,10 @@ namespace Parser {
 	class Token {
 
 	public:
-		Token();
+		Token(std::string value);
+		Token(double value);
+
+		Token(TokenType type, std::variant<std::string, double> value);
 
 		TokenType getType();
 		std::variant<std::string, double> getValue();

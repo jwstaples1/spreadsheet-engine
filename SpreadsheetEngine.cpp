@@ -1,6 +1,9 @@
 ﻿// SpreadsheetEngine.cpp : Defines the entry point for the application.
 //
 #include <memory>
+#include <vector>
+#include <format>
+#include <variant>
 
 #include "SpreadsheetEngine.h"
 #include "src/core/Spreadsheet.h"
@@ -10,19 +13,25 @@
 #include "src/core/cell/types/StringValue.h"
 #include "src/core/cell/types/FormulaicValue.h"
 
+#include "src/parser/tokens/Token.h"
+#include "src/parser/tokens/TokenType.h"
+
 using namespace std;
 
 void mockSpreadsheet();
+void mockParser();
 
 int main()
 {
 	mockSpreadsheet();
+	mockParser();
 
 	return 0;
 }
 
 void mockSpreadsheet() {
-
+	cout << "CORE SPREADSHEET TEST" << endl << "------------" << endl;
+	
 	// Create the spreadsheet
 	Spreadsheet::Spreadsheet spreadsheet("New spreadsheet!");
 	cout << spreadsheet.getName() << endl;
@@ -60,5 +69,34 @@ void mockSpreadsheet() {
 
 	if (!entries.contains(addr)) {
 		cout << addr.toString() + " cleared successfully" << endl;
+	}
+}
+
+void mockParser() {
+	cout << endl << endl << "PARSER TEST" << endl << "------------" << endl;
+	
+	// create a few different types of tokens to test the values and types persist correctly
+	Parser::Token tok1(4.5);
+	Parser::Token tok2("test");
+	Parser::Token tok3(TokenType::Equals, "=");
+
+	std::vector<Parser::Token> tokens = { tok1, tok2, tok3 };
+	constexpr std::string_view formatString = "Idx: {} | Type: {} | Val: {}";
+	for (int i = 0; i < tokens.size(); i++) {
+		Parser::Token tok = tokens.at(i);
+		std::variant <std::string, double> value = tok.getValue();
+
+		// AI written code to convert from std::variant<string, double> to string
+		std::string stringifiedValue = std::visit([](auto&& arg) -> std::string {
+			using T = std::decay_t<decltype(arg)>;
+			if constexpr (std::is_same_v<T, std::string>) {
+				return arg;
+			}
+			else {
+				return std::to_string(arg);
+			}
+			}, tok.getValue());
+
+		cout << std::format(formatString, i, (int)tok.getType(), stringifiedValue) << endl;
 	}
 }
