@@ -1,7 +1,7 @@
 ﻿# CMakeList.txt : CMake project for SpreadsheetEngine, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.10)
+cmake_minimum_required (VERSION 3.11)
 
 # Enable Hot Reload for MSVC compilers if supported.
 if (POLICY CMP0141)
@@ -11,12 +11,28 @@ endif()
 
 project ("SpreadsheetEngine")
 
-# Add source to this project's executable.
-add_executable (SpreadsheetEngine "SpreadsheetEngine.cpp" "SpreadsheetEngine.h" "src/core/Spreadsheet.cpp" "src/core/Spreadsheet.h"   "src/core/cell/CellAddress.cpp" "src/core/cell/CellAddress.h"  "src/core/cell/CellValue.h" "src/core/cell/ConstantValue.h" "src/core/cell/types/NumericValue.h" "src/core/cell/types/NumericValue.cpp" "src/core/cell/types/StringValue.cpp" "src/core/cell/types/StringValue.h")
+add_executable(SpreadsheetEngine)
 
-if (CMAKE_VERSION VERSION_GREATER 3.12)
-  set_property(TARGET SpreadsheetEngine PROPERTY CXX_STANDARD 20)
-endif()
+target_sources(SpreadsheetEngine PRIVATE
+    "SpreadsheetEngine.cpp"
+    "SpreadsheetEngine.h"
+    "src/core/Spreadsheet.cpp"
+    "src/core/Spreadsheet.h"
+    "src/core/Formula.h"
+    "src/core/Formula.cpp"
+    "src/core/cell/CellAddress.cpp"
+    "src/core/cell/CellAddress.h"
+    "src/core/cell/CellValue.h"
+    "src/core/cell/ConstantValue.h"
+    "src/core/cell/types/NumericValue.h"
+    "src/core/cell/types/NumericValue.cpp"
+    "src/core/cell/types/FormulaicValue.h"
+    "src/core/cell/types/FormulaicValue.cpp"
+    "src/core/cell/types/StringValue.cpp"
+    "src/core/cell/types/StringValue.h"
+)   
+
+target_compile_features(SpreadsheetEngine PRIVATE cxx_std_20)
 
 # TODO: Add tests and install targets if needed.
 
