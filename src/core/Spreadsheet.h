@@ -19,8 +19,8 @@ namespace Spreadsheet {
 		void setName(std::string newName);
 
 		const SpreadsheetEntries& getEntries() const;
-		void addEntry(Cell::CellAddress cellAddress, std::unique_ptr<Cell::CellValue> cellValue);
-		void clearEntry(Cell::CellAddress cellAddress);
+		void setValue(Cell::CellAddress cellAddress, std::unique_ptr<Cell::CellValue> cellValue);
+		void clearValue(Cell::CellAddress cellAddress);
 
 	private:
 		std::string m_name;

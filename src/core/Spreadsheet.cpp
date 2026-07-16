@@ -18,11 +18,11 @@ namespace Spreadsheet {
 		return m_entries;
 	}
 
-	void Spreadsheet::addEntry(CellAddress cellAddress, std::unique_ptr<CellValue> cellValue) {
+	void Spreadsheet::setValue(CellAddress cellAddress, std::unique_ptr<CellValue> cellValue) {
 		m_entries.insert_or_assign(cellAddress, std::move(cellValue));
 	}
 
-	void Spreadsheet::clearEntry(CellAddress cellAddress) {
+	void Spreadsheet::clearValue(CellAddress cellAddress) {
 		m_entries.erase(cellAddress);
 	}
 

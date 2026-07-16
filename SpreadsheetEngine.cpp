@@ -38,8 +38,8 @@ void mockSpreadsheet() {
 	Cell::StringValue stringVal("hello world!");
 
 	// add entries, and check they persist
-	spreadsheet.addEntry(addr, std::make_unique<Cell::NumericValue>(numVal));
-	spreadsheet.addEntry(addr2, std::make_unique<Cell::StringValue>(stringVal));
+	spreadsheet.setValue(addr, std::make_unique<Cell::NumericValue>(numVal));
+	spreadsheet.setValue(addr2, std::make_unique<Cell::StringValue>(stringVal));
 
 	const SpreadsheetEntries& entries = spreadsheet.getEntries();
 
@@ -47,7 +47,7 @@ void mockSpreadsheet() {
 	cout << entries.at(addr2)->toString() << endl;
 
 	// try to clear the first address and check the data is cleared out
-	spreadsheet.clearEntry(addr);
+	spreadsheet.clearValue(addr);
 
 	if (!entries.contains(addr)) {
 		cout << addr.toString() + " cleared successfully" << endl;
