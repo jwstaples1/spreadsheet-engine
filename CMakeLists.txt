@@ -30,6 +30,12 @@ target_sources(SpreadsheetEngine PRIVATE
     "src/core/cell/types/FormulaicValue.cpp"
     "src/core/cell/types/StringValue.cpp"
     "src/core/cell/types/StringValue.h"
+
+    "src/parser/Parser.cpp"
+    "src/parser/Parser.h"
+    "src/parser/tokens/Token.cpp"
+    "src/parser/tokens/Token.h"
+    "src/parser/tokens/TokenType.h"
 )   
 
 target_compile_features(SpreadsheetEngine PRIVATE cxx_std_20)
