@@ -13,6 +13,7 @@
 #include "src/core/cell/types/StringValue.h"
 #include "src/core/cell/types/FormulaicValue.h"
 
+#include "src/parser/Parser.h"
 #include "src/parser/tokens/Token.h"
 #include "src/parser/tokens/TokenType.h"
 
@@ -99,4 +100,14 @@ void mockParser() {
 
 		cout << std::format(formatString, i, (int)tok.getType(), stringifiedValue) << endl;
 	}
+
+	// create a formula and test evaluate it to ensure it evaluates correctly
+	Spreadsheet::Formula formula("=123+245");
+	Spreadsheet::Formula formula2("=A4+B8");
+
+	Parser::Parser testParser;
+
+	testParser.evaluate(formula);
+	testParser.evaluate(formula2);
+
 }

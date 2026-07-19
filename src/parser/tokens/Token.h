@@ -1,3 +1,5 @@
+#pragma once
+
 #include "TokenType.h"
 
 #include <variant>
@@ -5,20 +7,24 @@
 
 namespace Parser {
 
+	using TokenValue = std::variant<std::string, double>;
+
 	class Token {
 
 	public:
 		Token(std::string value);
 		Token(double value);
 
-		Token(TokenType type, std::variant<std::string, double> value);
+		Token(TokenType type, TokenValue value);
 
 		TokenType getType();
-		std::variant<std::string, double> getValue();
+		TokenValue getValue();
+
+		static TokenType getTokenTypeFromChar(char value);
 
 	private:
 		TokenType m_type;
-		std::variant<std::string, double> m_value;
+		TokenValue m_value;
 
 	};
 

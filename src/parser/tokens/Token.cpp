@@ -6,13 +6,24 @@ namespace Parser {
 
 	Token::Token(double value) : Token(TokenType::Numeric, value) {};
 
-	Token::Token(TokenType type, std::variant<std::string, double> value) : m_type(type), m_value(value) {};
+	Token::Token(TokenType type, TokenValue value) : m_type(type), m_value(value) {};
+
+	TokenType Token::getTokenTypeFromChar(char value) {
+		switch (value) {
+		case '=':
+			return TokenType::Equals;
+		case '+':
+			return TokenType::Plus;
+		default:
+			return TokenType::String;
+		}
+	}
 
 	TokenType Token::getType() {
 		return m_type;
 	}
 
-	std::variant<std::string, double> Token::getValue() {
+	TokenValue Token::getValue() {
 		return m_value;
 	}
 }
