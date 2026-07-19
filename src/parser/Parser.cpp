@@ -13,6 +13,7 @@ namespace Parser {
 
 	Cell::ConstantValue& Parser::evaluate(const Spreadsheet::Formula& formula) {
 
+		// parse the formula and extract all of the relevant tokens
 		std::vector<Token> tokens = parse(formula);
 		
 		for (int i = 0; i < tokens.size(); i++) {
@@ -38,8 +39,9 @@ namespace Parser {
 
 		std::vector<Token> parsedTokens;
 		parsedTokens.reserve(formulaString.size() / 2);
-		parsedTokens.emplace_back(TokenType::Equals, "=");
 
+		// we can add the '=' token since we already read it above
+		parsedTokens.emplace_back(TokenType::Equals, "=");
 
 		// store the last token we looked at if it's either numeric or string
 		struct IncompleteToken {
@@ -66,7 +68,7 @@ namespace Parser {
 			bool isNumeric = formulaChar >= '0' && formulaChar <= '9';
 
 			TokenType type = isNumeric ? TokenType::Numeric : Token::getTokenTypeFromChar(formulaChar);
-			bool isDynamicTokenType = type == TokenType::Numeric || type == TokenType::String;
+			bool isDynamicTokenType = Token::isDynamicTokenType(type);
 			
 			// for non-dynamic tokens, we can just mark them as parsed since we know what we see is what we get. 
 			// We also need to end a partial token and push it if we have one

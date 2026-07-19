@@ -12,15 +12,15 @@ namespace Parser {
 	class Token {
 
 	public:
+		static TokenType getTokenTypeFromChar(char value);
+		static bool isDynamicTokenType(TokenType type);
+
 		Token(std::string value);
 		Token(double value);
-
 		Token(TokenType type, TokenValue value);
 
 		TokenType getType();
 		TokenValue getValue();
-
-		static TokenType getTokenTypeFromChar(char value);
 
 	private:
 		TokenType m_type;
