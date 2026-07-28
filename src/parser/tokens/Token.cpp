@@ -9,6 +9,20 @@ namespace Parser {
 			return TokenType::Equals;
 		case '+':
 			return TokenType::Plus;
+		case '*':
+			return TokenType::Times;
+		case '-':
+			return TokenType::Minus;
+		case '/':
+			return TokenType::Divide;
+		case '(': 
+			return TokenType::LeftParenthesis;
+		case ')': 
+			return TokenType::RightParenthesis;
+		case ':':
+			return TokenType::Colon;
+		case ',':
+			return TokenType::Comma;
 		default:
 			return TokenType::String;
 		}

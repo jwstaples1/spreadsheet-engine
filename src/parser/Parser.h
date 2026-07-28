@@ -18,7 +18,8 @@ namespace Parser {
 		Cell::ConstantValue& evaluate(const Spreadsheet::Formula& formula);
 
 	private:
-		std::vector<Token> parse(const Spreadsheet::Formula& formula);
+		std::vector<Token> _parse(const Spreadsheet::Formula& formula);
+		Cell::ConstantValue& _evaluate(std::vector<Token> tokens);
 	};
 
 }

@@ -3,6 +3,7 @@
 #include <iostream>
 #include <format>
 #include <optional>
+#include <stack>
 
 #include "../core/cell/types/NumericValue.h"
 
@@ -13,21 +14,77 @@ namespace Parser {
 
 	Cell::ConstantValue& Parser::evaluate(const Spreadsheet::Formula& formula) {
 
-		// parse the formula and extract all of the relevant tokens
-		std::vector<Token> tokens = parse(formula);
+		// parse the formula and extract all of the relevant basic tokens
+		std::vector<Token> tokens = _parse(formula);
 		
+		std::cout << formula.toString() << std::endl;
 		for (int i = 0; i < tokens.size(); i++) {
 			std::cout << (int)tokens[i].getType() << std::endl;
 		}
 
 		std::cout << std::format("Num tokens: {}", tokens.size()) << std::endl;
 
-		Cell::NumericValue val(0);
-		return val;
+		if (tokens.size() == 0) {
+			std::cout << std::endl;
+			Cell::NumericValue val(0);
+			return val;
+		}
 
+		return _evaluate(tokens);
 	}
 
-	std::vector<Token> Parser::parse(const Spreadsheet::Formula& formula) {
+	Cell::ConstantValue& Parser::_evaluate(std::vector<Token> tokens) {
+
+		// read through the tokens that we evaluated and simplify some of the obvious things, like string, num -> address
+		std::vector<Token> postCleanupTokens;
+		postCleanupTokens.reserve(tokens.size());
+
+		for (int i = 0; i < tokens.size(); i++) {
+			Token currentTok = tokens[i];
+			
+			bool isAddressToken =
+				currentTok.getType() == TokenType::String &&
+				i < tokens.size() - 1 &&
+				tokens[i + 1].getType() == TokenType::Numeric;
+
+			if (isAddressToken) {
+				// create the address value and emplace a new address token, make sure to skip the next token
+				std::string col = std::get<std::string>(currentTok.getValue());
+				double row = std::get<double>(tokens[i + 1].getValue());
+
+				if (row - floor(row) > 0) {
+					throw std::exception();
+				} 
+
+				postCleanupTokens.emplace_back(TokenType::CellAddress, col + std::to_string((int)row));
+				i += 1;
+			}
+			else {
+				postCleanupTokens.push_back(currentTok);
+			}
+
+		}
+
+		// LOG POST CLEANUP
+		for (int i = 0; i < postCleanupTokens.size(); i++) {
+			Token token = postCleanupTokens[i];
+			if (token.getType() == TokenType::Numeric) {
+				std::cout << std::format("Token: {} | Type {}\n", std::to_string(std::get<double>(token.getValue())), (int)token.getType());
+			}
+			else {
+				std::cout << std::format("Token: {} | Type {} \n", std::get<std::string>(token.getValue()), (int)token.getType());
+			}
+		}
+
+		std::cout << std::format("Num tokens: {}", postCleanupTokens.size()) << std::endl;
+		std::cout << std::endl;
+
+
+		Cell::NumericValue val(0);
+		return val;
+	}
+
+	std::vector<Token> Parser::_parse(const Spreadsheet::Formula& formula) {
 		
 		// extract the actual formula string to parse
 		std::string formulaString = formula.toString();
@@ -65,7 +122,11 @@ namespace Parser {
 		// loop through the string to parse the tokens
 		for (int i = 1; i < formulaString.size(); i++) {
 			char formulaChar = formulaString[i];
-			bool isNumeric = formulaChar >= '0' && formulaChar <= '9';
+			
+			// skip any whitespace
+			if (formulaChar == ' ') continue;
+
+			bool isNumeric = formulaChar >= '0' && formulaChar <= '9' || formulaChar == '.';
 
 			TokenType type = isNumeric ? TokenType::Numeric : Token::getTokenTypeFromChar(formulaChar);
 			bool isDynamicTokenType = Token::isDynamicTokenType(type);

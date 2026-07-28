@@ -105,11 +105,13 @@ void mockParser() {
 	Spreadsheet::Formula formula("=123+245");
 	Spreadsheet::Formula formula2("=A4+B8");
 	Spreadsheet::Formula errorFormula("2+3");
+	Spreadsheet::Formula complexFormula("=A4*3+2+SUM(B3:N9)+SUM(1, 3+G6)");
 
 	Parser::Parser testParser;
 
 	testParser.evaluate(formula);
 	testParser.evaluate(formula2);
 	testParser.evaluate(errorFormula);
+	testParser.evaluate(complexFormula);
 
 }
