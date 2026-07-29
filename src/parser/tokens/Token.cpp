@@ -32,6 +32,11 @@ namespace Parser {
 		return type == TokenType::Numeric || type == TokenType::String;
 	}
 
+	Token Token::getNull() {
+		static Token nullInstance(TokenType::Empty, "");
+		return nullInstance;
+	}
+
 	// NOT STATIC
 	Token::Token(std::string value) : Token(TokenType::String, value) {};
 

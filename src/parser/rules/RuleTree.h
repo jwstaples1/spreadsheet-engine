@@ -12,7 +12,6 @@ namespace Parser {
 	public:
 		static RuleTree& getInstance();
 
-		int getSize();
 		const RuleTreeNode& getRoot();
 		
 		RuleTree(const RuleTree&) = delete;
@@ -26,7 +25,6 @@ namespace Parser {
 		RuleTree();
 
 		RuleTreeNode m_root;
-		int m_size;
 
 		void _readRules();
 	};

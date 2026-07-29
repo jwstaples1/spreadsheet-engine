@@ -50,7 +50,6 @@ namespace Parser {
 
 	Parser::Parser() {
 		RuleTree& tree = RuleTree::getInstance();
-		std::cout << "TREE SIZE: " << tree.getSize() << std::endl;
 		std::cout << "num root node children: " << tree.getRoot().getChildren().size() << std::endl;
 
 		printNode(tree.getRoot(), "", true);
@@ -81,38 +80,78 @@ namespace Parser {
 	Cell::ConstantValue& Parser::_evaluate(std::vector<Token> tokens) {
 
 		// read through the tokens that we evaluated and simplify some of the obvious things, like string, num -> address
-		std::vector<Token> postCleanupTokens;
-		postCleanupTokens.reserve(tokens.size());
+		std::vector<Token> workingTokens = tokens;
 
-		for (int i = 0; i < tokens.size(); i++) {
-			Token currentTok = tokens[i];
-			
-			bool isAddressToken =
-				currentTok.getType() == TokenType::String &&
-				i < tokens.size() - 1 &&
-				tokens[i + 1].getType() == TokenType::Numeric;
+		RuleTree& tree = RuleTree::getInstance();
+		const RuleTreeNode& root = tree.getRoot();
 
-			if (isAddressToken) {
-				// create the address value and emplace a new address token, make sure to skip the next token
-				std::string col = std::get<std::string>(currentTok.getValue());
-				double row = std::get<double>(tokens[i + 1].getValue());
+		/*
+			Iterate over the tokens and check if any match the rule tree
+				- if they do, merge them in place and trigger rerun
+				- if they dont, ignore and continue
+		*/
 
-				if (row - floor(row) > 0) {
-					throw std::exception();
-				} 
+		const RuleTreeNode* current;
+		bool rerun;
+		int startingIndex;
 
-				postCleanupTokens.emplace_back(TokenType::CellAddress, col + std::to_string((int)row));
-				i += 1;
+		do {
+			// make sure the starting state is always reset in each rerun
+			rerun = false;
+			current = &root;
+			startingIndex = -1;
+
+			for (int i = 0; i < workingTokens.size(); i++) {
+				Token currentTok = workingTokens[i];
+
+				// if we hit an empty type, just skip it
+				if (currentTok.getType() == TokenType::Empty) continue;
+
+				// if the type of the current token matches some token in the rule tree
+				if (current->getChildren().contains(currentTok.getType())) {
+
+					// if the current is still the root, i.e. this is the first token in this rule we're checking
+					if (current == &root) {
+						startingIndex = i;
+
+					}
+
+					// set current to the next node in the tree and check if thats the terminal
+					current = current->getChildren().at(currentTok.getType()).get();
+
+					// if it is the terminal, we've reached the end of this complex token.
+					// we can merge from startingIndex -> i, set the flag to rerun since we've made a change, and mark the extra spaces as empty
+					if (current->getTerminalRule().has_value()) {
+
+						// fill the in between space with null tokens
+						for (int j = startingIndex + 1; j <= i; j++) {
+							workingTokens[j] = Token::getNull();
+						}
+
+						workingTokens[startingIndex] = Token(current->getTerminalRule().value(), " Complex ! ");
+
+						// reset everything back to the starting state, except we want to rerun
+						startingIndex = -1;
+						rerun = true;
+						current = &root;
+					}
+				}
+				else {
+					if (current != &root) {
+						i = startingIndex + 1;
+						current = &root;
+					}
+				}
 			}
-			else {
-				postCleanupTokens.push_back(currentTok);
-			}
+		} while (rerun);
+		
 
-		}
+		// remove all of the empty tokens that were populated
+		std::erase_if(workingTokens, [](Token tok) { return tok.getType() == TokenType::Empty; });
 
 		// LOG POST CLEANUP
-		for (int i = 0; i < postCleanupTokens.size(); i++) {
-			Token token = postCleanupTokens[i];
+		for (int i = 0; i < workingTokens.size(); i++) {
+			Token token = workingTokens[i];
 			if (token.getType() == TokenType::Numeric) {
 				std::cout << std::format("Token: {} | Type {}\n", std::to_string(std::get<double>(token.getValue())), (int)token.getType());
 			}
@@ -121,7 +160,7 @@ namespace Parser {
 			}
 		}
 
-		std::cout << std::format("Num tokens: {}", postCleanupTokens.size()) << std::endl;
+		std::cout << std::format("Num tokens: {}", workingTokens.size()) << std::endl;
 		std::cout << std::endl;
 
 

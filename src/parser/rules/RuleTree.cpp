@@ -11,13 +11,9 @@ namespace Parser {
 		return instance;
 	}
 
-	RuleTree::RuleTree() : m_root(TokenType::Empty), m_size(1) {
+	RuleTree::RuleTree() : m_root(TokenType::Empty) {
 		_readRules();
 	};
-
-	int RuleTree::getSize() {
-		return m_size;
-	}
 
 	const RuleTreeNode& RuleTree::getRoot() {
 		return m_root;

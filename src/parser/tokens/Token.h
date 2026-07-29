@@ -15,6 +15,8 @@ namespace Parser {
 		static TokenType getTokenTypeFromChar(char value);
 		static bool isDynamicTokenType(TokenType type);
 
+		static Token getNull();
+
 		Token(std::string value);
 		Token(double value);
 		Token(TokenType type, TokenValue value);
