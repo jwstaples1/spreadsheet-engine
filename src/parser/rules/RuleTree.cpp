@@ -30,10 +30,11 @@ namespace Parser {
 				for (TokenType token : rule) {
 					lastNode = &lastNode->addChild(token);
 				}
+				lastNode->setTerminalRule(target);
 
 			}
 
-			lastNode->setTerminalRule(target);
+			
 		}
 
 	}

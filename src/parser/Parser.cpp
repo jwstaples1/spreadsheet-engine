@@ -143,11 +143,11 @@ namespace Parser {
 					}
 				}
 			}
-		} while (rerun);
-		
 
-		// remove all of the empty tokens that were populated
-		std::erase_if(workingTokens, [](Token tok) { return tok.getType() == TokenType::Empty; });
+			// remove all of the empty tokens that were populated
+			std::erase_if(workingTokens, [](Token tok) { return tok.getType() == TokenType::Empty; });
+
+		} while (rerun);
 
 		// LOG POST CLEANUP
 		for (int i = 0; i < workingTokens.size(); i++) {

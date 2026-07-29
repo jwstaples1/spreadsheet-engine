@@ -21,6 +21,9 @@ namespace Parser {
 		}},
 		{ExternalFormula, {
 			{String, LeftParenthesis, Arguments, RightParenthesis}
+		}},
+		{Arguments, {
+			{Range}
 		}}
 
 	};
