@@ -36,6 +36,11 @@ target_sources(SpreadsheetEngine PRIVATE
     "src/parser/tokens/Token.cpp"
     "src/parser/tokens/Token.h"
     "src/parser/tokens/TokenType.h"
+    "src/parser/rules/Rules.h"
+    "src/parser/rules/RuleTree.h"
+    "src/parser/rules/RuleTree.cpp"
+    "src/parser/rules/tree/RuleTreeNode.cpp"
+    "src/parser/rules/tree/RuleTreeNode.h"
 )   
 
 target_compile_features(SpreadsheetEngine PRIVATE cxx_std_20)

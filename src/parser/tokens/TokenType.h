@@ -1,6 +1,8 @@
 #pragma once
 
 enum class TokenType {
+	Empty,
+
 	Equals, // signifies the beginning of a formula
 
 	// Tokens which are dynamic size
@@ -21,6 +23,8 @@ enum class TokenType {
 
 	// Complex Tokens -- only used during evaluation step
 	CellAddress,
-	Argument,
+	Arguments,
 	Expression,
+	Range,
+	ExternalFormula,
 };

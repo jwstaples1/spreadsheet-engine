@@ -6,11 +6,56 @@
 #include <stack>
 
 #include "../core/cell/types/NumericValue.h"
+#include "rules/Rules.h"
+#include "rules/RuleTree.h"
+#include "rules/tree/RuleTreeNode.h"
 
+// AI Generated print code
+	void printNode(const Parser::RuleTreeNode& node,
+		const std::string& prefix,
+		bool isLast)
+	{
+		std::cout << prefix;
+
+		if (!prefix.empty())
+			std::cout << (isLast ? "└── " : "├── ");
+
+		std::cout << (int) node.getValue();
+
+		if (node.getTerminalRule().has_value())
+		{
+			std::cout << "  => "
+				<<  (int) *node.getTerminalRule();
+		}
+
+		std::cout << '\n';
+
+		const auto& children = node.getChildren();
+
+		std::size_t index = 0;
+		for (const auto& [type, child] : children)
+		{
+			++index;
+
+			printNode(
+				*child,
+				prefix + (prefix.empty()
+					? ""
+					: (isLast ? "    " : "│   ")),
+				index == children.size());
+		}
+	}
 
 namespace Parser {
 
-	Parser::Parser() {};
+	Parser::Parser() {
+		RuleTree& tree = RuleTree::getInstance();
+		std::cout << "TREE SIZE: " << tree.getSize() << std::endl;
+		std::cout << "num root node children: " << tree.getRoot().getChildren().size() << std::endl;
+
+		printNode(tree.getRoot(), "", true);
+		std::cout << std::endl << std::endl;
+	};
 
 	Cell::ConstantValue& Parser::evaluate(const Spreadsheet::Formula& formula) {
 
