@@ -21,12 +21,16 @@ namespace Parser {
 
 
 	void RuleTree::_readRules() {
-		for (const auto& [target, rule] : RULES) {
+		for (const auto& [target, rules] : RULES) {
 
 			RuleTreeNode* lastNode = &m_root;
 
-			for (TokenType token : rule) {
-				lastNode = &lastNode->addChild(token);
+			for (auto rule : rules) {
+				
+				for (TokenType token : rule) {
+					lastNode = &lastNode->addChild(token);
+				}
+
 			}
 
 			lastNode->setTerminalRule(target);
