@@ -1,32 +1,41 @@
 #pragma once
 
 #include "../tokens/TokenType.h"
+#include "../tokens/Token.h"
 
 #include <unordered_map>
 #include <vector>
+#include <functional>
 
 namespace Parser {
 
-	using RulesMap = std::unordered_map<TokenType, const std::vector<std::vector<TokenType>>>;
+	using TransformationFunctionArgs = const std::vector<TokenValue>&;
+
+	extern Token fromStringNumericToAddress(TransformationFunctionArgs values);
+	extern Token fromAddressesToRange(TransformationFunctionArgs values);
+	extern Token fromNameAndArgsToFormula(TransformationFunctionArgs values);
+	extern Token fromRangeToArguments(TransformationFunctionArgs values);
+
+	using RuleTransformFunction = std::function<Token(TransformationFunctionArgs)>;
+
+	using RulesMap = std::unordered_map<TokenType, const std::vector<std::pair<std::vector<TokenType>, RuleTransformFunction>>>;
 
 	using enum TokenType;
 
 	inline const RulesMap RULES = {
 
 		{CellAddress, {
-			{String, Numeric}
+			{ std::vector<TokenType>{String, Numeric}, fromStringNumericToAddress }
 		}},
 		{Range, {
-			{CellAddress, Colon, CellAddress}
+			{ std::vector<TokenType>{CellAddress, Colon, CellAddress}, fromAddressesToRange }
 		}},
 		{ExternalFormula, {
-			{String, LeftParenthesis, Arguments, RightParenthesis}
+			{ std::vector<TokenType>{String, LeftParenthesis, Arguments, RightParenthesis}, fromNameAndArgsToFormula }
 		}},
 		{Arguments, {
-			{Range}
+			{ std::vector<TokenType>{ Range }, fromRangeToArguments }
 		}}
 
 	};
-	
-
 }

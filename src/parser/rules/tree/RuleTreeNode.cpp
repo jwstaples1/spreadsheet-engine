@@ -1,4 +1,5 @@
 #include "RuleTreeNode.h"
+#include "../Rules.h"
 
 namespace Parser {
 
@@ -12,8 +13,8 @@ namespace Parser {
 		return m_children;
 	}
 
-	const std::optional<TokenType>& RuleTreeNode::getTerminalRule() const {
-		return m_terminalRule;
+	const std::optional<RuleTransformFunction>& RuleTreeNode::getTransformFunction() const {
+		return m_transformFunction;
 	}
 
 	RuleTreeNode& RuleTreeNode::addChild(TokenType type) {
@@ -22,8 +23,8 @@ namespace Parser {
 		return *it->second;
 	}
 
-	void RuleTreeNode::setTerminalRule(TokenType type) {
-		m_terminalRule = type;
+	void RuleTreeNode::setTransform(RuleTransformFunction transformFunction) {
+		m_transformFunction = transformFunction;
 	}
 
 }

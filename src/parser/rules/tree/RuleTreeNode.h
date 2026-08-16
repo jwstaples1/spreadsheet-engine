@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../../tokens/TokenType.h"
+#include "../Rules.h"
 
 #include <unordered_map>
 #include <memory>
@@ -14,16 +15,16 @@ namespace Parser {
 		RuleTreeNode(TokenType val);
 
 		TokenType getValue() const;
-		const std::optional<TokenType>& getTerminalRule() const;
+		const std::optional<RuleTransformFunction>& getTransformFunction() const;
 		const std::unordered_map<TokenType, std::unique_ptr<RuleTreeNode>>& getChildren() const;
 
 		RuleTreeNode& addChild(TokenType type);
-		void setTerminalRule(TokenType type);
+		void setTransform(RuleTransformFunction type);
 
 	private:
 		TokenType m_value;
 		std::unordered_map<TokenType, std::unique_ptr<RuleTreeNode>> m_children;
-		std::optional<TokenType> m_terminalRule;
+		std::optional<RuleTransformFunction> m_transformFunction;
 	};
 
 }

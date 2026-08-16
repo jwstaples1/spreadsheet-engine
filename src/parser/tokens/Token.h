@@ -22,7 +22,7 @@ namespace Parser {
 		Token(TokenType type, TokenValue value);
 
 		TokenType getType();
-		TokenValue getValue();
+		const TokenValue& getValue();
 
 	private:
 		TokenType m_type;

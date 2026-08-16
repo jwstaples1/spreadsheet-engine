@@ -27,10 +27,13 @@ namespace Parser {
 
 			for (auto rule : rules) {
 				
-				for (TokenType token : rule) {
+				auto& [sequence, transformFunction] = rule;
+
+				for (TokenType token : sequence) {
 					lastNode = &lastNode->addChild(token);
 				}
-				lastNode->setTerminalRule(target);
+
+				lastNode->setTransform(transformFunction);
 
 			}
 

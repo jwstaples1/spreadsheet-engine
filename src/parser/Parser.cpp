@@ -22,10 +22,9 @@
 
 		std::cout << (int) node.getValue();
 
-		if (node.getTerminalRule().has_value())
+		if (node.getTransformFunction().has_value())
 		{
-			std::cout << "  => "
-				<<  (int) *node.getTerminalRule();
+			node.getTransformFunction().value()({});
 		}
 
 		std::cout << '\n';
@@ -121,14 +120,14 @@ namespace Parser {
 
 					// if it is the terminal, we've reached the end of this complex token.
 					// we can merge from startingIndex -> i, set the flag to rerun since we've made a change, and mark the extra spaces as empty
-					if (current->getTerminalRule().has_value()) {
+					if (current->getTransformFunction().has_value()) {
 
 						// fill the in between space with null tokens
 						for (int j = startingIndex + 1; j <= i; j++) {
 							workingTokens[j] = Token::getNull();
 						}
 
-						workingTokens[startingIndex] = Token(current->getTerminalRule().value(), " Complex ! ");
+						workingTokens[startingIndex] = current->getTransformFunction().value()({});
 
 						// reset everything back to the starting state, except we want to rerun
 						startingIndex = -1;
@@ -144,10 +143,10 @@ namespace Parser {
 				}
 			}
 
-			// remove all of the empty tokens that were populated
-			std::erase_if(workingTokens, [](Token tok) { return tok.getType() == TokenType::Empty; });
-
 		} while (rerun);
+
+		// remove all of the empty tokens that were populated
+		std::erase_if(workingTokens, [](Token tok) { return tok.getType() == TokenType::Empty; });
 
 		// LOG POST CLEANUP
 		for (int i = 0; i < workingTokens.size(); i++) {

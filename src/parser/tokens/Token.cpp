@@ -48,7 +48,7 @@ namespace Parser {
 		return m_type;
 	}
 
-	TokenValue Token::getValue() {
+	const TokenValue& Token::getValue() {
 		return m_value;
 	}
 }

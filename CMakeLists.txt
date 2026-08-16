@@ -39,6 +39,7 @@ target_sources(SpreadsheetEngine PRIVATE
     "src/parser/rules/Rules.h"
     "src/parser/rules/RuleTree.h"
     "src/parser/rules/RuleTree.cpp"
+    "src/parser/rules/TransformFunctions.cpp"
     "src/parser/rules/tree/RuleTreeNode.cpp"
     "src/parser/rules/tree/RuleTreeNode.h"
 )   
